@@ -1,0 +1,78 @@
+FOTOS -> PDF (enderezar, aplanar hojas de libro, limpiar, girar y unir en un solo PDF)
+=================================================================
+
+1) DESCOMPRIMIR
+   Clic derecho sobre Fotos2PDF.zip -> "Extraer todo..." -> elige una carpeta
+   (por ejemplo C:\Fotos2PDF) -> Extraer.
+   No ejecutes nada desde dentro del zip: primero hay que extraerlo.
+
+2) INSTALAR PYTHON (solo la primera vez, si no lo tienes)
+   - Descarga Python 3.10 o superior desde https://www.python.org/downloads/
+   - En el instalador, MARCA la casilla "Add python.exe to PATH" y pulsa Install Now.
+   - Comprueba: abre cmd y escribe   python --version
+
+3) INSTALAR LAS LIBRERIAS (solo la primera vez)
+   Doble clic en  1_INSTALAR.bat   (necesita internet; tarda unos minutos).
+   El OCR (ocrmypdf) se instala aparte al final; si falla, ignoralo: solo se necesita para el OCR (punto 6).
+
+4a) PANTALLAZOS PEGADOS (pagina inicial)
+   Doble clic en 2_INICIAR.bat -> se abre http://127.0.0.1:8765 (index.html).
+   - Haz clic en el recuadro y pega con Ctrl+V cada pantallazo (o muchos seguidos; vale para 300+).
+     Tambien puedes arrastrar imagenes o elegirlas del disco.
+   - Arrastra las miniaturas para reordenar; la "x" quita una.
+   - "Generar PDF..." -> primero te pregunta DONDE GUARDAR el PDF, despues une todo
+     en un unico PDF y al final le aplica OCR automaticamente (casilla activada por defecto).
+   - El OCR necesita Tesseract (idioma Spanish) y Ghostscript (ver punto 6). Sin ellos el PDF
+     se guarda igualmente, sin capa de texto, y se avisa en pantalla.
+   - La interfaz de fotos de carpeta sigue disponible en http://127.0.0.1:8765/carpetas
+
+4) USAR LA INTERFAZ WEB DE CARPETAS
+   Doble clic en  2_INICIAR.bat   -> se abre el navegador en http://127.0.0.1:8765
+   - "Examinar..." y elige la carpeta con las fotos del iCloud (o escribe la ruta).
+   - Modo: Color / Gris / Blanco y negro (el B/N es el mejor para texto y pesa menos).
+   - Pulsa "Procesar y crear PDF". Veras el progreso y las miniaturas.
+   - Las paginas con aviso naranja (folio no detectado) conviene revisarlas.
+   - El PDF queda como resultado.pdf dentro de la carpeta de fotos (o donde indiques).
+   Todo se procesa en tu PC; no se sube nada a internet.
+
+4b) FOTOS DE LIBROS (hojas curvadas)
+   En la interfaz, deja marcada la casilla "Fotos de libro (aplanar hojas)".
+   El programa endereza la curvatura de la hoja, recorta la pagina principal
+   (descarta la hoja vecina) y gira el texto si hace falta.
+   - Necesita la libreria page-dewarp (la instala 1_INSTALAR.bat).
+   - Tarda unos segundos por foto (usa varios nucleos del PC a la vez).
+   - Funciona mejor con la pagina entera a la vista y buena luz.
+   - Modo recomendado: "Gris" (conserva las fotos/figuras); "Blanco y negro" para solo texto.
+   - Por linea de comandos:  python fotos2pdf.py "C:\Fotos\lote1" salida.pdf --libro --modo gris
+   - Paginas marcadas en naranja = el aplanado fallo; se limpian sin aplanar.
+
+5) USO POR LINEA DE COMANDOS (alternativa)
+   Abre cmd en la carpeta extraida y escribe, por ejemplo:
+     python fotos2pdf.py "C:\Fotos\lote1" salida.pdf
+     python fotos2pdf.py "C:\Fotos\lote1" salida.pdf --modo bn --ocr --lang spa
+   Opciones: --modo color|gris|bn   --calidad 82   --ocr   --lang spa   --sin-giro   --libro   --hilos N
+
+6) OCR (texto buscable en el PDF) - OPCIONAL
+   - Instala Tesseract para Windows (build de UB Mannheim):
+     https://github.com/UB-Mannheim/tesseract/wiki
+     Durante la instalacion marca el idioma "Spanish" (y deja "Orientation and script detection").
+   - Instala Ghostscript: https://ghostscript.com/releases/gsdnld.html
+   - Reinicia el PC o abre un cmd nuevo y marca "OCR" en la interfaz (o usa --ocr).
+   Tesseract tambien mejora mucho el giro automatico de las paginas.
+
+7) FOTOS DESDE EL IPHONE / ICLOUD
+   - iPhone: Ajustes > Fotos > "Transferir a Mac o PC" > "Mantener originales".
+   - PC: instala "iCloud para Windows"; en el Explorador abre "Fotos de iCloud",
+     selecciona las fotos, clic derecho > "Mantener siempre en este dispositivo".
+     Pon las fotos de cada lote en una carpeta aparte.
+   - Consejo al fotografiar: folio sobre fondo oscuro liso, buena luz sin sombras,
+     y que se vean las 4 esquinas de la hoja.
+
+8) CONSEJOS
+   - Prueba primero con ~10 fotos antes de lanzar las 300.
+   - Las paginas salen en orden alfabetico del nombre (IMG_0001, IMG_0002...).
+   - Si una pagina sale girada mal (poco texto: fotos, esquemas), giralas aparte.
+   - Solucion de problemas:
+       "python no se reconoce"  -> reinstala Python marcando "Add to PATH".
+       No se abren HEIC         -> pip install pillow-heif (ya incluido).
+       OCR da error             -> revisa Tesseract y Ghostscript (punto 6).
